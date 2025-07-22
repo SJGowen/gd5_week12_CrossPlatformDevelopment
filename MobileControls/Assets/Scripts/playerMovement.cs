@@ -34,14 +34,6 @@ public class playerMovement : MonoBehaviour
 
     void CalculateTouchInputs()
     {
-        // if the touch position is on the left side of the screen, we will use it as a dpad
-        if (Input.touchCount == 0 || Input.mousePosition.x > Screen.width / 2)
-        {
-            dpad.gameObject.SetActive(false);
-            inputDirection = Vector2.zero;
-            return;
-        }
-
         if (Input.touchCount > 0)
         {
             theTouch = Input.GetTouch(0);
@@ -49,23 +41,25 @@ public class playerMovement : MonoBehaviour
 
             if (theTouch.phase == TouchPhase.Began)
             {
-                touchStart = Input.mousePosition;
+                touchStart = theTouch.position;
             }
-
-            touchEnd = Input.mousePosition;
-
-            float x = touchEnd.x - touchStart.x;
-            float y = touchEnd.y - touchStart.y;
-
-            inputDirection = new Vector2(x, y).normalized;
-
-            if ((touchEnd - touchStart).magnitude > dpadRadius)
+            else if (theTouch.phase == TouchPhase.Moved || theTouch.phase == TouchPhase.Ended)
             {
-                dpad.transform.position = touchStart + (touchEnd - touchStart).normalized * dpadRadius;
-            }
-            else
-            {
-                dpad.transform.position = touchEnd;
+                touchEnd = Input.mousePosition;
+
+                float x = touchEnd.x - touchStart.x;
+                float y = touchEnd.y - touchStart.y;
+
+                inputDirection = new Vector2(x, y).normalized;
+
+                if ((touchEnd - touchStart).magnitude > dpadRadius)
+                {
+                    dpad.transform.position = touchStart + (touchEnd - touchStart).normalized * dpadRadius;
+                }
+                else
+                {
+                    dpad.transform.position = touchEnd;
+                }
             }
         }
         else
