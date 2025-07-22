@@ -8,6 +8,7 @@ public class playerMovement : MonoBehaviour
     Animator anim;
 
     private Vector2 touchStart, touchEnd;
+    private Touch theTouch;
     public Image dpad;
     public float dpadRadius = 30f;
 
@@ -22,7 +23,7 @@ public class playerMovement : MonoBehaviour
     void Update()
     {
         //getting input from keyboard controls
-        CalculateMouseInputs();
+        CalculateTouchInputs();
 
         //sets up the animator
         AnimationSetup();
@@ -31,21 +32,22 @@ public class playerMovement : MonoBehaviour
         transform.Translate(inputDirection * moveSpeed * Time.deltaTime);
     }
 
-    void CalculateMouseInputs()
+    void CalculateTouchInputs()
     {
-        // if the mouse position is on the left side of the screen, we will use it as a dpad
-        if (Input.mousePosition.x > Screen.width / 2)
+        // if the touch position is on the left side of the screen, we will use it as a dpad
+        if (Input.touchCount == 0 || Input.mousePosition.x > Screen.width / 2)
         {
             dpad.gameObject.SetActive(false);
             inputDirection = Vector2.zero;
             return;
         }
 
-        if (Input.GetMouseButton(0))
+        if (Input.touchCount > 0)
         {
+            theTouch = Input.GetTouch(0);
             dpad.gameObject.SetActive(true);
 
-            if (Input.GetMouseButtonDown(0))
+            if (theTouch.phase == TouchPhase.Began)
             {
                 touchStart = Input.mousePosition;
             }
