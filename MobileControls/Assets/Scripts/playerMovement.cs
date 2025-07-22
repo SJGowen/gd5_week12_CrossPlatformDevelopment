@@ -33,6 +33,14 @@ public class playerMovement : MonoBehaviour
 
     void CalculateMouseInputs()
     {
+        // if the mouse position is on the left side of the screen, we will use it as a dpad
+        if (Input.mousePosition.x > Screen.width / 2)
+        {
+            dpad.gameObject.SetActive(false);
+            inputDirection = Vector2.zero;
+            return;
+        }
+
         if (Input.GetMouseButton(0))
         {
             dpad.gameObject.SetActive(true);
