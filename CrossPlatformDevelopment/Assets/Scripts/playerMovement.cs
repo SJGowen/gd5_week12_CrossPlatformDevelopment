@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 
 public class playerMovement : MonoBehaviour
@@ -10,8 +9,12 @@ public class playerMovement : MonoBehaviour
 
     private Vector2 touchStart;
     private Vector2 touchEnd;
+
+    [Header("D-Pad Settings")]
     public GameObject dpad;
-    public float dpadRadius = 25f;
+    public GameObject dpadBackground;
+    public float dpadRadius = 15f;
+
     private Touch theTouch;
     private InputType inputType;
 
@@ -22,6 +25,9 @@ public class playerMovement : MonoBehaviour
 
         //makes the character look down by default
         lookDirection = new Vector2(0, -1);
+
+        //turnoff the dpad and dpad background at the start
+        dpadActivate(false);
     }
 
     // Update is called once per frame
@@ -71,6 +77,19 @@ public class playerMovement : MonoBehaviour
         {
             dpad.SetActive(active);
         }
+
+        if (dpadBackground != null)
+        {
+            dpadBackground.SetActive(active);
+        }
+    }
+    
+    private void SetDpadBackgroundPosition(Vector2 position)
+    {
+        if (dpadBackground != null)
+        {
+            dpadBackground.transform.position = position;
+        }
     }
 
     void CalculateDesktopInputs()
@@ -95,6 +114,8 @@ public class playerMovement : MonoBehaviour
             if (Input.GetMouseButtonDown(0))
             {
                 touchStart = Input.mousePosition;
+                SetDpadBackgroundPosition(touchStart);
+                
             }
 
             touchEnd = Input.mousePosition;
