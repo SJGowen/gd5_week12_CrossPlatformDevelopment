@@ -49,14 +49,10 @@ public class playerMovement : MonoBehaviour
             DebugLogInputMethod(InputType.Touch);
             CalculateTouchInputs();
         }
-        else if (Input.anyKey)
+        else
         {
             DebugLogInputMethod(InputType.Keyboard);
             CalculateDesktopInputs();
-        }
-        else
-        {
-            dpadActivate(false);
         }
     }
 
@@ -126,6 +122,7 @@ public class playerMovement : MonoBehaviour
         {
             CalculateInputDirection(theTouch.position);
             UpdateDpadPosition();
+            dpadActivate(false);
         }
     }
 
