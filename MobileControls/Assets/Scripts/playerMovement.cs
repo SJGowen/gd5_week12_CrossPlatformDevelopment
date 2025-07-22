@@ -1,15 +1,11 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Rendering;
 
 public class playerMovement : MonoBehaviour
 {
     [SerializeField] float moveSpeed;
-    public Vector2 inputDirection,lookDirection;
+    public Vector2 inputDirection, lookDirection;
     Animator anim;
 
-    // Start is called before the first frame update
     void Start()
     {
         anim = GetComponent<Animator>();
@@ -18,21 +14,19 @@ public class playerMovement : MonoBehaviour
         lookDirection = new Vector2(0, -1);
     }
 
-    // Update is called once per frame
     void Update()
     {
         //getting input from keyboard controls
-        calculateDesktopInputs();
+        CalculateDesktopInputs();
 
         //sets up the animator
-        animationSetup();
+        AnimationSetup();
 
         //moves the player
         transform.Translate(inputDirection * moveSpeed * Time.deltaTime);
     }
 
-
-    void calculateDesktopInputs()
+    void CalculateDesktopInputs()
     {
         float x = Input.GetAxisRaw("Horizontal");
         float y = Input.GetAxisRaw("Vertical");
@@ -41,13 +35,11 @@ public class playerMovement : MonoBehaviour
 
         if(Input.GetKeyDown(KeyCode.Space))
         {
-            attack();
+            Attack();
         }
-
     }
 
-
-    void animationSetup()
+    void AnimationSetup()
     {
         //checking if the player wants to move the character or not
         if (inputDirection.magnitude > 0.1f)
@@ -72,13 +64,8 @@ public class playerMovement : MonoBehaviour
         anim.SetFloat("lookY", lookDirection.y);
     }
 
-    public void attack()
+    public void Attack()
     {
         anim.SetTrigger("Attack");
-    }
-
-    void calculateMobileInput()
-    {
-
     }
 }
