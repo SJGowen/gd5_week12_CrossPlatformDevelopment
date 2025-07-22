@@ -138,6 +138,7 @@ public class playerMovement : MonoBehaviour
         if (theTouch.phase == TouchPhase.Began)
         {
             touchStart = theTouch.position;
+            SetDpadBackgroundPosition(touchStart);
         }
         else if (theTouch.phase == TouchPhase.Moved || theTouch.phase == TouchPhase.Ended)
         {
