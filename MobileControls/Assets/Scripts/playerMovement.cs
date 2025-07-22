@@ -1,10 +1,15 @@
 using UnityEngine;
+using UnityEngine.UI;
 
 public class playerMovement : MonoBehaviour
 {
     [SerializeField] float moveSpeed;
     public Vector2 inputDirection, lookDirection;
     Animator anim;
+
+    private Vector2 touchStart, touchEnd;
+    public Image dpad;
+    public float dpadRadius = 30f;
 
     void Start()
     {
@@ -17,7 +22,7 @@ public class playerMovement : MonoBehaviour
     void Update()
     {
         //getting input from keyboard controls
-        CalculateDesktopInputs();
+        CalculateMouseInputs();
 
         //sets up the animator
         AnimationSetup();
@@ -26,16 +31,37 @@ public class playerMovement : MonoBehaviour
         transform.Translate(inputDirection * moveSpeed * Time.deltaTime);
     }
 
-    void CalculateDesktopInputs()
+    void CalculateMouseInputs()
     {
-        float x = Input.GetAxisRaw("Horizontal");
-        float y = Input.GetAxisRaw("Vertical");
-
-        inputDirection = new Vector2(x, y).normalized;
-
-        if(Input.GetKeyDown(KeyCode.Space))
+        if (Input.GetMouseButton(0))
         {
-            Attack();
+            dpad.gameObject.SetActive(true);
+
+            if (Input.GetMouseButtonDown(0))
+            {
+                touchStart = Input.mousePosition;
+            }
+
+            touchEnd = Input.mousePosition;
+
+            float x = touchEnd.x - touchStart.x;
+            float y = touchEnd.y - touchStart.y;
+
+            inputDirection = new Vector2(x, y).normalized;
+
+            if ((touchEnd - touchStart).magnitude > dpadRadius)
+            {
+                dpad.transform.position = touchStart + (touchEnd - touchStart).normalized * dpadRadius;
+            }
+            else
+            {
+                dpad.transform.position = touchEnd;
+            }
+        }
+        else
+        {
+            dpad.gameObject.SetActive(false);
+            inputDirection = Vector2.zero;
         }
     }
 
