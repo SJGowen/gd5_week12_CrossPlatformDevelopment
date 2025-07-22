@@ -1,15 +1,17 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Rendering;
+using UnityEngine.UI;
 
 public class playerMovement : MonoBehaviour
 {
     [SerializeField] float moveSpeed;
-    public Vector2 inputDirection,lookDirection;
+    public Vector2 inputDirection, lookDirection;
     Animator anim;
 
-    // Start is called before the first frame update
+    private Vector2 touchStart, touchEnd;
+    private Touch theTouch;
+    public Image dpad;
+    public float dpadRadius = 30f;
+
     void Start()
     {
         anim = GetComponent<Animator>();
@@ -18,36 +20,56 @@ public class playerMovement : MonoBehaviour
         lookDirection = new Vector2(0, -1);
     }
 
-    // Update is called once per frame
     void Update()
     {
         //getting input from keyboard controls
-        calculateDesktopInputs();
+        CalculateTouchInputs();
 
         //sets up the animator
-        animationSetup();
+        AnimationSetup();
 
         //moves the player
         transform.Translate(inputDirection * moveSpeed * Time.deltaTime);
     }
 
-
-    void calculateDesktopInputs()
+    void CalculateTouchInputs()
     {
-        float x = Input.GetAxisRaw("Horizontal");
-        float y = Input.GetAxisRaw("Vertical");
-
-        inputDirection = new Vector2(x, y).normalized;
-
-        if(Input.GetKeyDown(KeyCode.Space))
+        if (Input.touchCount > 0)
         {
-            attack();
-        }
+            theTouch = Input.GetTouch(0);
+            dpad.gameObject.SetActive(true);
 
+            if (theTouch.phase == TouchPhase.Began)
+            {
+                touchStart = theTouch.position;
+            }
+            else if (theTouch.phase == TouchPhase.Moved || theTouch.phase == TouchPhase.Ended)
+            {
+                touchEnd = Input.mousePosition;
+
+                float x = touchEnd.x - touchStart.x;
+                float y = touchEnd.y - touchStart.y;
+
+                inputDirection = new Vector2(x, y).normalized;
+
+                if ((touchEnd - touchStart).magnitude > dpadRadius)
+                {
+                    dpad.transform.position = touchStart + (touchEnd - touchStart).normalized * dpadRadius;
+                }
+                else
+                {
+                    dpad.transform.position = touchEnd;
+                }
+            }
+        }
+        else
+        {
+            dpad.gameObject.SetActive(false);
+            inputDirection = Vector2.zero;
+        }
     }
 
-
-    void animationSetup()
+    void AnimationSetup()
     {
         //checking if the player wants to move the character or not
         if (inputDirection.magnitude > 0.1f)
@@ -72,13 +94,8 @@ public class playerMovement : MonoBehaviour
         anim.SetFloat("lookY", lookDirection.y);
     }
 
-    public void attack()
+    public void Attack()
     {
         anim.SetTrigger("Attack");
-    }
-
-    void calculateMobileInput()
-    {
-
     }
 }
