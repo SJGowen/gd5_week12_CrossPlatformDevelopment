@@ -129,8 +129,7 @@ public class playerMovement : MonoBehaviour
             }
 
             touchEnd = Input.mousePosition;
-
-            CalculateInputDirection(Input.mousePosition);
+            CalculateInputDirection(touchEnd);
             UpdateDpadPosition();
         }
         else
@@ -152,7 +151,8 @@ public class playerMovement : MonoBehaviour
     //    }
     //    else if (theTouch.phase == TouchPhase.Moved || theTouch.phase == TouchPhase.Ended)
     //    {
-    //        CalculateInputDirection(theTouch.position);
+    //        touchEnd = theTouch.position;
+    //        CalculateInputDirection(touchEnd);
     //        UpdateDpadPosition();
     //        dpadActivate(false);
     //    }
@@ -174,8 +174,6 @@ public class playerMovement : MonoBehaviour
 
     private void CalculateInputDirection(Vector2 position)
     {
-        touchEnd = position;
-
         float x = touchEnd.x - touchStart.x;
         float y = touchEnd.y - touchStart.y;
 
