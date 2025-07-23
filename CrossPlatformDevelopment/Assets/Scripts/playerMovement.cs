@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class playerMovement : MonoBehaviour
 {
@@ -18,6 +19,9 @@ public class playerMovement : MonoBehaviour
     private Touch theTouch;
     private InputType inputType;
 
+    private PlayerInput playerInput;
+    private InputAction moveAction;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -25,6 +29,10 @@ public class playerMovement : MonoBehaviour
 
         //makes the character look down by default
         lookDirection = new Vector2(0, -1);
+
+        //setup the New Input System
+        playerInput = GetComponent<PlayerInput>();
+        moveAction = playerInput.actions.FindAction("Move");
 
         //turnoff the dpad and dpad background at the start
         dpadActivate(false);
@@ -50,11 +58,11 @@ public class playerMovement : MonoBehaviour
             DebugLogInputMethod(InputType.Mobile);
             CalculateMobileInput();
         }
-        else if (Input.touchCount > 0)
-        {
-            DebugLogInputMethod(InputType.Touch);
-            CalculateTouchInputs();
-        }
+        //else if (Input.touchCount > 0)
+        //{
+        //    DebugLogInputMethod(InputType.Touch);
+        //    CalculateTouchInputs();
+        //}
         else
         {
             DebugLogInputMethod(InputType.Keyboard);
@@ -94,10 +102,12 @@ public class playerMovement : MonoBehaviour
 
     void CalculateDesktopInputs()
     {
-        float x = Input.GetAxisRaw("Horizontal");
-        float y = Input.GetAxisRaw("Vertical");
+        //float x = Input.GetAxisRaw("Horizontal");
+        //float y = Input.GetAxisRaw("Vertical");
 
-        inputDirection = new Vector2(x, y).normalized;
+        //inputDirection = new Vector2(x, y).normalized;
+
+        inputDirection = moveAction.ReadValue<Vector2>();
 
         if (Input.GetKeyDown(KeyCode.Space))
         {
@@ -130,23 +140,23 @@ public class playerMovement : MonoBehaviour
         }
     }
 
-    void CalculateTouchInputs()
-    {
-        theTouch = Input.GetTouch(0);
-        dpadActivate(true);
+    //void CalculateTouchInputs()
+    //{
+    //    theTouch = Input.GetTouch(0);
+    //    dpadActivate(true);
 
-        if (theTouch.phase == TouchPhase.Began)
-        {
-            touchStart = theTouch.position;
-            SetDpadBackgroundPosition(touchStart);
-        }
-        else if (theTouch.phase == TouchPhase.Moved || theTouch.phase == TouchPhase.Ended)
-        {
-            CalculateInputDirection(theTouch.position);
-            UpdateDpadPosition();
-            dpadActivate(false);
-        }
-    }
+    //    if (theTouch.phase == TouchPhase.Began)
+    //    {
+    //        touchStart = theTouch.position;
+    //        SetDpadBackgroundPosition(touchStart);
+    //    }
+    //    else if (theTouch.phase == TouchPhase.Moved || theTouch.phase == TouchPhase.Ended)
+    //    {
+    //        CalculateInputDirection(theTouch.position);
+    //        UpdateDpadPosition();
+    //        dpadActivate(false);
+    //    }
+    //}
 
     private void UpdateDpadPosition()
     {
