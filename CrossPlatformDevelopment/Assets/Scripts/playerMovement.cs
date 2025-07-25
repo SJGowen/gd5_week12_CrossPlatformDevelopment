@@ -91,7 +91,7 @@ public class playerMovement : MonoBehaviour
             dpadBackground.SetActive(active);
         }
     }
-    
+
     private void SetDpadBackgroundPosition(Vector2 position)
     {
         if (dpadBackground != null)
@@ -109,7 +109,12 @@ public class playerMovement : MonoBehaviour
 
         inputDirection = moveAction.ReadValue<Vector2>();
 
-        if (Input.GetKeyDown(KeyCode.Space))
+        //if (Input.GetKeyDown(KeyCode.Space))
+        //{
+        //    Attack();
+        //}
+
+        if (Keyboard.current.spaceKey.wasPressedThisFrame)
         {
             Attack();
         }
@@ -125,7 +130,7 @@ public class playerMovement : MonoBehaviour
             {
                 touchStart = Input.mousePosition;
                 SetDpadBackgroundPosition(touchStart);
-                
+
             }
 
             touchEnd = Input.mousePosition;
