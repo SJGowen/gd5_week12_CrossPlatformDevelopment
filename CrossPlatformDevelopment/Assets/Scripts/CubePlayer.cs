@@ -18,6 +18,14 @@ public class CubePlayer : MonoBehaviour
         GetComponent<Renderer>().material.color = colour;
     }
 
+    public void OnChangeColour(InputAction.CallbackContext context)
+    {
+        if (context.performed)
+        {
+            ChangeColour();
+        }
+    }
+
     public void OnMove(InputAction.CallbackContext context)
     {
         moveInput = context.ReadValue<Vector2>();
